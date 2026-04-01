@@ -25,8 +25,8 @@ export class QueueService {
     return {
       queue: 'orders-enrichment',
       isPaused,
-      counts: mainCounts,
-      dlq: { queue: 'orders-enrichment-dlq', counts: dlqCounts },
+      counts: mainCounts as any,
+      dlq: { queue: 'orders-enrichment-dlq', counts: dlqCounts as any },
       fetchedAt: new Date().toISOString(),
     };
   }
