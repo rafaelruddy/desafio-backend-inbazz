@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  RECEIVED
+  PROCESSING
+  ENRICHED
+  FAILED_ENRICHMENT
+}
+
+model Customer {
+  id    String @id @default(uuid())
+  email String @unique
+  name  String
+
+  orders Order[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("customers")
+}
+
+model Address {
+  id           String  @id @default(uuid())
+  orderId      String  @unique @map("order_id")
+  cep          String  @db.VarChar(9)
+  number       String
+  complement   String?
+  street       String?
+  neighborhood String?
+  city         String?
+  state        String? @db.VarChar(2)
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("addresses")
+}
+
+model Order {
+  id             String      @id @default(uuid())
+  externalId     String      @unique @map("external_id")
+  idempotencyKey String      @unique @map("idempotency_key")
+  status         OrderStatus @default(RECEIVED)
+  currency       String      @db.VarChar(3)
+  totalAmount    Decimal     @map("total_amount") @db.Decimal(10, 2)
+
+  customerId String   @map("customer_id")
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  address         Address?
+  items           OrderItem[]
+  convertedTotals ConvertedTotal[]
+
+  enrichedAt DateTime? @map("enriched_at")
+  enrichedBy String?   @map("enriched_by")
+
+  retryCount    Int     @default(0) @map("retry_count")
+  failureReason String? @map("failure_reason")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String  @map("order_id")
+  sku       String
+  qty       Int
+  unitPrice Decimal @map("unit_price") @db.Decimal(10, 2)
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_items")
+}
+
+model ConvertedTotal {
+  id       String  @id @default(uuid())
+  orderId  String  @map("order_id")
+  currency String  @db.VarChar(3)
+  amount   Decimal @db.Decimal(10, 2)
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("converted_totals")
+}
