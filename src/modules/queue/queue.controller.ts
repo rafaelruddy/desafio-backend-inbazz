@@ -10,7 +10,11 @@ export class QueueController {
 
   @Get('metrics')
   @ApiOperation({ summary: 'Métricas da fila de processamento' })
-  @ApiResponse({ status: 200, description: 'Métricas retornadas', type: QueueMetricsDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Métricas retornadas',
+    type: QueueMetricsDto,
+  })
   getMetrics(): Promise<QueueMetricsDto> {
     return this.queueService.getMetrics();
   }

@@ -2,6 +2,8 @@
 
 API para recebimento, enfileiramento e enriquecimento assíncrono de pedidos via webhook, construída com **NestJS**, **BullMQ**, **Prisma** e **Redis**.
 
+> Requisitos completos do desafio: [docs/DESAFIO.md](docs/DESAFIO.md)
+
 ## Arquitetura
 
 <p align="center">
@@ -17,7 +19,8 @@ API para recebimento, enfileiramento e enriquecimento assíncrono de pedidos via
 | Banco de dados | PostgreSQL 16 |
 | ORM | Prisma 5 |
 | Fila | BullMQ + Redis 7 |
-| Idempotência | BullMQ (jobId = idempotency_key) |
+| Idempotência | Redis (SET NX + TTL) |
+| Autenticação | Bearer Token (Guard) |
 | Integrações | [Exchange Rate API](https://www.exchangerate-api.com/), [ViaCEP](https://viacep.com.br/) |
 | Documentação | Swagger / OpenAPI |
 | Containerização | Docker + Docker Compose |
@@ -65,6 +68,9 @@ npm run start:dev
 | `REDIS_URL` | Connection string Redis | `redis://localhost:6379` |
 | `EXCHANGE_API_URL` | URL base da API de câmbio | `https://api.exchangerate-api.com/v4/latest` |
 | `TARGET_CURRENCIES` | Moedas-alvo para conversão (separadas por vírgula) | `BRL,EUR` |
+| `PORT` | Porta do servidor | `3000` |
+| `WEBHOOK_SECRET` | Token de autenticação para o webhook (Bearer) | — |
+| `IDEMPOTENCY_TTL` | TTL em segundos das chaves de idempotência no Redis | `86400` |
 
 ## Documentação da API (Swagger)
 
@@ -76,7 +82,7 @@ Todos os endpoints possuem DTOs de request e response documentados com exemplos.
 
 | Método | Rota | Descrição |
 |---|---|---|
-| `POST` | `/webhooks/orders` | Receber pedido via webhook |
+| `POST` | `/webhooks/orders` | Receber pedido via webhook (requer Bearer token) |
 | `GET` | `/orders` | Listar pedidos (filtro opcional por status) |
 | `GET` | `/orders/:id` | Detalhes de um pedido |
 | `GET` | `/queue/metrics` | Métricas da fila de processamento |
@@ -85,6 +91,7 @@ Todos os endpoints possuem DTOs de request e response documentados com exemplos.
 
 ```
 POST /webhooks/orders
+Authorization: Bearer <WEBHOOK_SECRET>
 ```
 
 ```json
@@ -155,7 +162,7 @@ GET /queue/metrics
 
 ## Fluxo de processamento
 
-1. **Recebimento** — `POST /webhooks/orders` valida o payload, gera o UUID do pedido e enfileira o job usando a `idempotency_key` como `jobId` do BullMQ (duplicatas são rejeitadas automaticamente). Retorna `202` sem tocar no banco.
+1. **Recebimento** — `POST /webhooks/orders` passa pelo pipeline: **Guard** (valida Bearer token) → **Interceptor** (verifica idempotência via Redis `SET NX` com TTL; se a chave já existe, retorna a resposta cacheada sem executar o handler) → **Pipe** (valida payload) → **Handler** (gera UUID, enfileira o job). Retorna `202` sem tocar no banco.
 2. **Persistência** — O processor consome o job e persiste o pedido no banco com status `RECEIVED`.
 3. **Enriquecimento** — Em paralelo, consulta a Exchange Rate API (conversão de moedas) e a ViaCEP (dados do endereço). Atualiza o pedido com os dados obtidos.
 4. **Sucesso** — Status atualizado para `ENRICHED`, totais convertidos e endereço completo salvos no banco.
@@ -198,7 +205,8 @@ npm run test:e2e
 ```
 
 Os testes unitários cobrem:
-- **WebhookService** — idempotência via BullMQ jobId, cálculo do total, enfileiramento do payload completo
+- **IdempotencyInterceptor** — cache de resposta via Redis SET NX, proteção contra race condition, TTL configurável
+- **WebhookService** — cálculo do total, enfileiramento do payload completo
 - **EnrichmentProcessor** — persistência, orquestração das integrações, transições de status, retry sem re-persistir, DLQ no esgotamento de tentativas
 
 ## Estrutura do projeto
@@ -207,9 +215,12 @@ Os testes unitários cobrem:
 src/
 ├── common/
 │   ├── filters/                 # Filtro global de exceções HTTP
+│   ├── guards/                  # AuthTokenGuard (Bearer token)
+│   ├── interceptors/            # IdempotencyInterceptor (Redis SET NX)
 │   └── order.types.ts           # Tipos compartilhados
 ├── infrastructure/
 │   ├── prisma/                  # Serviço e módulo do Prisma
+│   ├── redis/                   # Módulo global do Redis (ioredis)
 │   ├── repositories/            # PrismaOrderRepository
 ├── integrations/
 │   ├── exchange-rate/           # Módulo de conversão de moedas

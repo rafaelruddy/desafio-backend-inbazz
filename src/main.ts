@@ -24,6 +24,7 @@ async function bootstrap() {
       'API para recebimento, enfileiramento e enriquecimento assíncrono de pedidos via webhook',
     )
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

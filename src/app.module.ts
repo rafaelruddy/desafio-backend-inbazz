@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
 import { LoggerModule } from 'nestjs-pino';
 import { PrismaModule } from './infrastructure/prisma/prisma.module';
+import { RedisModule } from './infrastructure/redis/redis.module';
 import { WebhookModule } from './modules/webhook/webhook.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { EnrichmentModule } from './modules/enrichment/enrichment.module';
@@ -21,6 +22,7 @@ import { CustomLogger } from './custom.logger';
       },
     }),
     PrismaModule,
+    RedisModule,
 
     BullModule.forRootAsync({
       inject: [ConfigService],

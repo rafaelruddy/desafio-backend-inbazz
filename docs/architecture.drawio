@@ -1,111 +1,132 @@
 <mxfile host="app.diagrams.net" agent="Claude" version="26.0.0">
   <diagram id="order-orchestrator" name="Arquitetura">
-    <mxGraphModel dx="1100" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="700" math="0" shadow="0">
+    <mxGraphModel dx="1200" dy="750" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="750" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
 
         <!-- Title -->
         <mxCell id="title" value="Orquestrador de Pedidos" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#1a1a1a;" vertex="1" parent="1">
-          <mxGeometry x="400" y="15" width="300" height="30" as="geometry" />
+          <mxGeometry x="450" y="15" width="300" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Pipeline label -->
+        <mxCell id="pipeline-label" value="NestJS Request Pipeline" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2;fontColor=#999;" vertex="1" parent="1">
+          <mxGeometry x="120" y="65" width="550" height="20" as="geometry" />
         </mxCell>
 
         <!-- Cliente -->
         <mxCell id="client" value="&lt;b&gt;Cliente&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#90A4AE;fontColor=#37474F;arcSize=20;" vertex="1" parent="1">
-          <mxGeometry x="30" y="120" width="120" height="50" as="geometry" />
+          <mxGeometry x="30" y="110" width="100" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Webhook -->
-        <mxCell id="webhook" value="&lt;b&gt;Webhook&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Validação + Idempotência&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#4CAF50;fontColor=#2E7D32;arcSize=15;" vertex="1" parent="1">
-          <mxGeometry x="220" y="105" width="160" height="60" as="geometry" />
+        <!-- Guard -->
+        <mxCell id="guard" value="&lt;b&gt;Guard&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Bearer Token&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#FB8C00;fontColor=#E65100;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="170" y="100" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Interceptor -->
+        <mxCell id="interceptor" value="&lt;b&gt;Interceptor&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Idempotência&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E5F5;strokeColor=#8E24AA;fontColor=#6A1B9A;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="330" y="100" width="130" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Webhook Handler -->
+        <mxCell id="webhook" value="&lt;b&gt;Webhook&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Validação + Enfileirar&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#4CAF50;fontColor=#2E7D32;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="500" y="100" width="150" height="60" as="geometry" />
         </mxCell>
 
         <!-- Redis -->
-        <mxCell id="redis" value="&lt;b&gt;Redis / BullMQ&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEBEE;strokeColor=#D32F2F;fontColor=#C62828;arcSize=15;" vertex="1" parent="1">
-          <mxGeometry x="450" y="105" width="140" height="60" as="geometry" />
+        <mxCell id="redis" value="&lt;b&gt;Redis&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;BullMQ + Idempotência&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEBEE;strokeColor=#D32F2F;fontColor=#C62828;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="400" y="250" width="160" height="60" as="geometry" />
         </mxCell>
 
         <!-- Enrichment -->
         <mxCell id="enrichment" value="&lt;b&gt;Enrichment&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Processa + Orquestra&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#1976D2;fontColor=#1565C0;arcSize=15;" vertex="1" parent="1">
-          <mxGeometry x="660" y="105" width="160" height="60" as="geometry" />
+          <mxGeometry x="660" y="250" width="160" height="60" as="geometry" />
         </mxCell>
 
         <!-- PostgreSQL -->
         <mxCell id="postgres" value="&lt;b&gt;PostgreSQL&lt;/b&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=8;fillColor=#E8EAF6;strokeColor=#3F51B5;fontColor=#283593;" vertex="1" parent="1">
-          <mxGeometry x="450" y="260" width="140" height="70" as="geometry" />
+          <mxGeometry x="420" y="410" width="140" height="70" as="geometry" />
         </mxCell>
 
         <!-- Orders Module -->
-        <mxCell id="orders-module" value="&lt;b&gt;Orders API&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E5F5;strokeColor=#8E24AA;fontColor=#6A1B9A;arcSize=15;" vertex="1" parent="1">
-          <mxGeometry x="250" y="270" width="130" height="50" as="geometry" />
+        <mxCell id="orders-module" value="&lt;b&gt;Orders API&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8EAF6;strokeColor=#3F51B5;fontColor=#283593;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="200" y="420" width="130" height="50" as="geometry" />
         </mxCell>
 
         <!-- Exchange Rate -->
         <mxCell id="exchange" value="&lt;b&gt;ExchangeRate API&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF8E1;strokeColor=#F9A825;fontColor=#F57F17;arcSize=15;" vertex="1" parent="1">
-          <mxGeometry x="560" y="430" width="160" height="50" as="geometry" />
+          <mxGeometry x="850" y="340" width="160" height="50" as="geometry" />
         </mxCell>
 
         <!-- ViaCep -->
         <mxCell id="viacep" value="&lt;b&gt;ViaCEP API&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F7FA;strokeColor=#00ACC1;fontColor=#00838F;arcSize=15;" vertex="1" parent="1">
-          <mxGeometry x="350" y="430" width="160" height="50" as="geometry" />
+          <mxGeometry x="850" y="250" width="160" height="50" as="geometry" />
         </mxCell>
 
         <!-- DLQ -->
         <mxCell id="dlq" value="&lt;b&gt;DLQ&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4EC;strokeColor=#E53935;fontColor=#C62828;arcSize=15;" vertex="1" parent="1">
-          <mxGeometry x="870" y="105" width="100" height="60" as="geometry" />
+          <mxGeometry x="690" y="410" width="100" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Arrows: main flow -->
-        <mxCell id="a1" value="POST" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#90A4AE;strokeWidth=1.5;fontSize=9;fontColor=#B0BEC5;" edge="1" source="client" target="webhook" parent="1">
+        <!-- Arrows: pipeline -->
+        <mxCell id="a1" value="POST" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#90A4AE;strokeWidth=1.5;fontSize=9;fontColor=#B0BEC5;" edge="1" source="client" target="guard" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="a2" value="enqueue" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#90A4AE;strokeWidth=1.5;fontSize=9;fontColor=#B0BEC5;" edge="1" source="webhook" target="redis" parent="1">
+        <mxCell id="a2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#90A4AE;strokeWidth=1.5;" edge="1" source="guard" target="interceptor" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="a3" value="process" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#90A4AE;strokeWidth=1.5;fontSize=9;fontColor=#B0BEC5;" edge="1" source="redis" target="enrichment" parent="1">
+        <mxCell id="a3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#90A4AE;strokeWidth=1.5;" edge="1" source="interceptor" target="webhook" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Interceptor → Redis (idempotency check) -->
+        <mxCell id="a-idem" value="SET NX" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#8E24AA;strokeWidth=1.5;dashed=1;fontSize=9;fontColor=#8E24AA;" edge="1" source="interceptor" target="redis" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Webhook → Redis (enqueue) -->
+        <mxCell id="a4" value="enqueue" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#4CAF50;strokeWidth=1.5;fontSize=9;fontColor=#4CAF50;" edge="1" source="webhook" target="redis" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Redis → Enrichment (process) -->
+        <mxCell id="a5" value="process" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#90A4AE;strokeWidth=1.5;fontSize=9;fontColor=#B0BEC5;" edge="1" source="redis" target="enrichment" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
         <!-- Enrichment → PostgreSQL -->
-        <mxCell id="a4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#90A4AE;strokeWidth=1.5;" edge="1" source="enrichment" target="postgres" parent="1">
+        <mxCell id="a6" value="persist" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#90A4AE;strokeWidth=1.5;fontSize=9;fontColor=#B0BEC5;" edge="1" source="enrichment" target="postgres" parent="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="740" y="290" />
+              <mxPoint x="740" y="380" />
+              <mxPoint x="490" y="380" />
             </Array>
           </mxGeometry>
         </mxCell>
 
         <!-- Orders → PostgreSQL -->
-        <mxCell id="a5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#90A4AE;strokeWidth=1.5;" edge="1" source="orders-module" target="postgres" parent="1">
+        <mxCell id="a7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#90A4AE;strokeWidth=1.5;" edge="1" source="orders-module" target="postgres" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
         <!-- Enrichment → APIs externas -->
-        <mxCell id="a6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#00ACC1;strokeWidth=1.5;dashed=1;" edge="1" source="enrichment" target="viacep" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="700" y="390" />
-              <mxPoint x="430" y="390" />
-            </Array>
-          </mxGeometry>
+        <mxCell id="a8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#00ACC1;strokeWidth=1.5;dashed=1;" edge="1" source="enrichment" target="viacep" parent="1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="a7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#F9A825;strokeWidth=1.5;dashed=1;" edge="1" source="enrichment" target="exchange" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="760" y="400" />
-              <mxPoint x="640" y="400" />
-            </Array>
-          </mxGeometry>
+        <mxCell id="a9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#F9A825;strokeWidth=1.5;dashed=1;" edge="1" source="enrichment" target="exchange" parent="1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
         <!-- Enrichment → DLQ -->
-        <mxCell id="a8" value="falha" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#E53935;strokeWidth=1.5;dashed=1;fontSize=9;fontColor=#E53935;" edge="1" source="enrichment" target="dlq" parent="1">
+        <mxCell id="a10" value="falha" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#E53935;strokeWidth=1.5;dashed=1;fontSize=9;fontColor=#E53935;" edge="1" source="enrichment" target="dlq" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
         <!-- Status Flow -->
-        <mxCell id="status" value="RECEIVED → PROCESSING → ENRICHED | FAILED" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2;fontColor=#999;" vertex="1" parent="1">
-          <mxGeometry x="350" y="200" width="350" height="20" as="geometry" />
+        <mxCell id="status" value="RECEIVED → PROCESSING → ENRICHED | FAILED_ENRICHMENT" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2;fontColor=#999;" vertex="1" parent="1">
+          <mxGeometry x="350" y="195" width="400" height="20" as="geometry" />
         </mxCell>
 
       </root>

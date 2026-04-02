@@ -22,7 +22,7 @@ export class WebhookService {
       0,
     );
 
-    const job = await this.queue.add(
+    await this.queue.add(
       'process-order',
       {
         orderId,
@@ -44,13 +44,7 @@ export class WebhookService {
       },
     );
 
-    if (job) {
-      this.logger.log(`Order ${orderId} enqueued`);
-      return { status: 'received', orderId };
-    }
-
-    const existing = await this.queue.getJob(dto.idempotency_key);
-    this.logger.log(`Idempotent request for key ${dto.idempotency_key}`);
-    return { status: 'already_received', orderId: existing?.data?.orderId };
+    this.logger.log(`Order ${orderId} enqueued`);
+    return { status: 'received', orderId };
   }
 }

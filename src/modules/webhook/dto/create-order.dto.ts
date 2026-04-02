@@ -7,6 +7,7 @@ import {
   IsNumber,
   IsPositive,
   IsNotEmpty,
+  IsOptional,
   ValidateNested,
   ArrayMinSize,
   Length,
@@ -38,6 +39,8 @@ class AddressDto {
   number: string;
 
   @ApiPropertyOptional({ example: 'apto 42' })
+  @IsOptional()
+  @IsString()
   complement?: string;
 }
 

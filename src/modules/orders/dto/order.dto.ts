@@ -63,7 +63,10 @@ export class OrderDto {
   @ApiProperty({ example: 'uuid-or-hash' })
   idempotencyKey: string;
 
-  @ApiProperty({ enum: ['RECEIVED', 'PROCESSING', 'ENRICHED', 'FAILED_ENRICHMENT'], example: 'ENRICHED' })
+  @ApiProperty({
+    enum: ['RECEIVED', 'PROCESSING', 'ENRICHED', 'FAILED_ENRICHMENT'],
+    example: 'ENRICHED',
+  })
   status: string;
 
   @ApiProperty({ example: 'USD' })
